@@ -4,6 +4,8 @@ import "@mantine/core/styles.css";
 
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { Roboto } from "next/font/google";
+import { Shell } from "@/components/Shell/Shell";
+import { AuthProvider } from "@/providers/auth";
 import CustomMantineProvider from "@/providers/mantine-provider";
 
 const roboto = Roboto({
@@ -26,7 +28,11 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <CustomMantineProvider>{children}</CustomMantineProvider>
+        <CustomMantineProvider>
+          <AuthProvider>
+            <Shell>{children}</Shell>
+          </AuthProvider>
+        </CustomMantineProvider>
       </body>
     </html>
   );

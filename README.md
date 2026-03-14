@@ -1,5 +1,11 @@
 # Skazka orders 2026
 
+## Documentation
+
+Detailed project documentation is available in:
+
+- `docs/README.md`
+
 ## Summary
 
 This web app is for fetching the list of sales agents' orders, as well as some various reports.
