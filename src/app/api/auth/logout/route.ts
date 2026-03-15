@@ -1,10 +1,14 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { PB_TOKEN_COOKIE_NAME } from "@/lib/auth/auth";
+import {
+  PB_EXTERNAL_ID_COOKIE_NAME,
+  PB_TOKEN_COOKIE_NAME,
+} from "@/lib/auth/auth";
 
 async function clearSessionCookie() {
   const tokenCookieStore = await cookies();
   tokenCookieStore.delete(PB_TOKEN_COOKIE_NAME);
+  tokenCookieStore.delete(PB_EXTERNAL_ID_COOKIE_NAME);
 }
 
 export async function GET() {

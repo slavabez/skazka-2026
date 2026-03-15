@@ -2,8 +2,8 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import {
   getTokenTimeLeft,
-  parseJWT,
   PB_TOKEN_COOKIE_NAME,
+  parseJWT,
 } from "@/lib/auth/auth";
 import {
   getAuthCookieSettings,

@@ -4,28 +4,24 @@
 
 ### `/`
 
-- Current minimal home page
+- Minimal home page for quick navigation
 
 ### `/login`
 
-- Manual login form with phone + password
+- Manual login form (phone + password)
 - Supports token impersonation via query parameter:
   - `/login?t=<jwt>`
 
-### `/utils` (Utilities)
+### `/utils`
 
 ID conversion tools:
 
 - Convert `1C ID` (32 chars) to UUID
 - Convert UUID to `1C ID`
 - Parse `ref` from a 1C link and convert to UUID
-  - Example input:
-    - `e1cib/data/Справочник.Пользователи?ref=8936000c29dddd3811ecc9c9312e175a`
 - Copy buttons for output values
 
-Core logic:
-
-- `src/lib/utils/ids.ts`
+Core logic: `src/lib/utils/ids.ts`
 
 ## Protected Pages
 
@@ -33,32 +29,57 @@ Protected by `src/proxy.ts` (requires `pb_token` cookie).
 
 ### `/profile`
 
-- Displays user avatar (generated from name), name, and phone
+- Displays user avatar, name, and phone
 - Includes logout button
 
 ### `/orders/by-date`
 
-- Placeholder page for order view filtered by order date
+- Working orders list filtered by order creation date
+- Date picker (`?date=YYYY-MM-DD`)
+- Shows total count, total sum, and order list
 
 ### `/orders/by-delivery`
 
-- Placeholder page for order view filtered by delivery date
+- Working orders list filtered by delivery date
+- Date picker (`?date=YYYY-MM-DD`)
+- Shows total count, total sum, and order list
+
+### `/orders/[orderId]`
+
+- Order details page
+- Shows header fields (status, payment, delivery info, comment, total)
+- Shows order line items with discount breakdown
 
 ### `/reports/goods`
 
-- Placeholder page for goods sales report
+- Working sales report grouped by manufacturer and goods
+- Date range filtering via query params (`startDate`, `endDate`)
+- Quick range buttons for previous/current month
+- Group totals and overall summary
 
 ### `/reports/clients`
 
-- Placeholder page for client sales report
+- Working sales report grouped by clients
+- Date range filtering and month shortcuts
+- Summary totals (sales, discounts)
 
 ### `/reports/goods-and-clients`
 
-- Placeholder page for combined goods/client report
+- Working nested sales report (client -> manufacturer -> goods)
+- Date range filtering and month shortcuts
+- Summary totals for selected period
 
 ### `/reports/debts`
 
-- Placeholder page for debts report
+- Working debts report grouped by counterparty
+- Displays debt totals and per-document entries
+- Links each document to `/sale-document/[id]`
+
+### `/sale-document/[id]`
+
+- Detailed sales document page
+- Shows debt status (paid/unpaid), header details, and line items
+- Provides link back to related order when available
 
 ## Navigation and Layout
 

@@ -5,8 +5,8 @@ import "@mantine/core/styles.css";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { Roboto } from "next/font/google";
 import { Shell } from "@/components/Shell/Shell";
-import { AuthProvider } from "@/providers/auth";
 import CustomMantineProvider from "@/providers/mantine-provider";
+import AppProviders from "@/providers/providers";
 
 const roboto = Roboto({
   subsets: ["latin", "cyrillic"],
@@ -29,9 +29,9 @@ export default function RootLayout({
       </head>
       <body>
         <CustomMantineProvider>
-          <AuthProvider>
+          <AppProviders>
             <Shell>{children}</Shell>
-          </AuthProvider>
+          </AppProviders>
         </CustomMantineProvider>
       </body>
     </html>

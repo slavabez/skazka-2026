@@ -11,6 +11,8 @@ Skazka Dashboard is an internal web application used by sales agents and sales m
 - [API Reference](./api-reference.md)
 - [Pages and Features](./pages-and-features.md)
 - [Development Guide](./development.md)
+- [Testing Strategy](./testing-strategy.md)
+- [Deployment and Containerization](./deployment.md)
 
 ## Quick Start
 

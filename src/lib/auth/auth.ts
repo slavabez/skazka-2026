@@ -10,6 +10,7 @@ export const PB_TOKEN_EXPIRY_THRESHOLD = 24 * 60 * 60;
  * Auth token cookie name. This is used to set and get the auth token from the cookie. "pb_token" by default.
  */
 export const PB_TOKEN_COOKIE_NAME = "pb_token";
+export const PB_EXTERNAL_ID_COOKIE_NAME = "pb_external_id";
 
 const PHONE_DIGITS_WITH_COUNTRY_CODE = 11;
 

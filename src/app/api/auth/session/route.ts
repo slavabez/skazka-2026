@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import {
   getTokenTimeLeft,
+  PB_EXTERNAL_ID_COOKIE_NAME,
   PB_TOKEN_COOKIE_NAME,
   PB_TOKEN_EXPIRY_THRESHOLD,
   parseJWT,
@@ -44,6 +45,11 @@ export async function GET() {
     const userData = await getPocketBaseUserById({
       token: activeToken,
       userId: tokenData.id,
+    });
+    tokenCookieStore.set({
+      name: PB_EXTERNAL_ID_COOKIE_NAME,
+      value: userData.externalId,
+      ...getAuthCookieSettings(),
     });
 
     return NextResponse.json({

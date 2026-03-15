@@ -1,5 +1,12 @@
-import { Title } from '@mantine/core';
+import OrdersPageView from "@/components/orders/OrdersPageView";
 
 export default function OrdersDeliveryPage() {
-  return <Title order={2}>Заказы по доставке</Title>;
+  return (
+    <OrdersPageView
+      apiRoute="/api/orders/by-delivery"
+      title="Заказы по дате доставки"
+      dateLabel="Дата доставки"
+      description="Здесь показаны заказы с доставкой на выбранный день."
+    />
+  );
 }

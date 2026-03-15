@@ -9,43 +9,47 @@ Skazka Dashboard follows a server-assisted frontend architecture:
 - **Business data source**: 1C OData API.
 - **Cache layer**: Redis for OData responses.
 
-The browser does not talk to PocketBase or 1C directly for sensitive operations. Authentication and data access logic are handled in server routes and server-side libraries.
+The browser does not talk to PocketBase or 1C directly for sensitive operations. Authentication and business data access are handled in server routes and server-side libraries.
 
 ## Main Source Directories
 
-- `src/app` — pages and API routes
-- `src/components` — UI components (e.g., app shell)
-- `src/providers` — global providers (auth, theme)
-- `src/lib/auth` — auth utilities and PocketBase API wrappers
-- `src/lib/odata` — OData request helpers and order service
-- `src/config` — infrastructure config (Redis)
-- `src/types` — generated and app-level TypeScript types
+- `src/app` - pages and API routes
+- `src/components` - UI components (shell, orders, reports)
+- `src/providers` - global providers (auth, theme, SWR)
+- `src/lib/auth` - auth utilities and PocketBase API wrappers
+- `src/lib/odata` - OData request helpers and domain services
+- `src/lib/orders`, `src/lib/reports`, `src/lib/sale` - adapters and report logic
+- `src/config` - infrastructure config (Redis)
+- `src/types` - generated and app-level TypeScript types
 
 ## Data Flow
 
 ### Authentication flow
 
-1. User submits phone + password on `/login`.
-2. `POST /api/auth/login` normalizes the phone, authenticates against PocketBase.
-3. PocketBase JWT is stored in an **HTTP-only cookie** (`pb_token`).
-4. Auth provider periodically validates session via `GET /api/auth/session`.
-5. Session endpoint can refresh token when close to expiry.
+1. User signs in via `/login` with phone and password (or token impersonation via `?t=`).
+2. `POST /api/auth/login` normalizes phone number and authenticates against PocketBase.
+3. App stores two HTTP-only cookies:
+   - `pb_token` - PocketBase JWT
+   - `pb_external_id` - external 1C user id from PocketBase record
+4. Auth provider validates session via `GET /api/auth/session` on an interval.
+5. Session endpoint refreshes token when close to expiry and keeps `pb_external_id` in sync.
 
 ### OData flow
 
-1. Server code builds OData query URL from parameters.
-2. Response is cached in Redis (keyed by full OData URL).
-3. Cached data is returned on subsequent requests until TTL expires.
+1. Server code builds OData query URL from request parameters and authenticated user context.
+2. OData responses are cached in Redis (keyed by full OData URL).
+3. Adapters transform raw 1C records into UI/API response models.
 
 ## Protected Routes
 
-Middleware-like route protection is implemented via `src/proxy.ts`.
+Route protection is implemented via `src/proxy.ts`.
 
 Currently protected route groups:
 
 - `/orders/*`
 - `/reports/*`
 - `/profile/*`
+- `/sale-document/*`
 
 If the `pb_token` cookie is missing, user is redirected to `/login`.
 
@@ -59,4 +63,4 @@ If the `pb_token` cookie is missing, user is redirected to `/login`.
   - If logged out: link to login
   - If logged in: profile link, user avatar, logout button
 
-The shell is disabled on `/login` to show a focused auth screen.
+The shell is disabled on `/login` to keep the auth screen focused.

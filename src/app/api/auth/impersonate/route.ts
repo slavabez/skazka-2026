@@ -1,7 +1,15 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getTokenTimeLeft, parseJWT, PB_TOKEN_COOKIE_NAME } from "@/lib/auth/auth";
-import { getAuthCookieSettings, getPocketBaseUserById } from "@/lib/auth/pocketbase";
+import {
+  getTokenTimeLeft,
+  PB_EXTERNAL_ID_COOKIE_NAME,
+  PB_TOKEN_COOKIE_NAME,
+  parseJWT,
+} from "@/lib/auth/auth";
+import {
+  getAuthCookieSettings,
+  getPocketBaseUserById,
+} from "@/lib/auth/pocketbase";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -28,6 +36,11 @@ export async function GET(request: Request) {
     tokenCookieStore.set({
       name: PB_TOKEN_COOKIE_NAME,
       value: token,
+      ...getAuthCookieSettings(),
+    });
+    tokenCookieStore.set({
+      name: PB_EXTERNAL_ID_COOKIE_NAME,
+      value: userData.externalId,
       ...getAuthCookieSettings(),
     });
 

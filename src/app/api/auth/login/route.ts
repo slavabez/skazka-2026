@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 import {
   getTokenTimeLeft,
   normalizeKzPhone,
-  parseJWT,
+  PB_EXTERNAL_ID_COOKIE_NAME,
   PB_TOKEN_COOKIE_NAME,
+  parseJWT,
 } from "@/lib/auth/auth";
 import {
   getAuthCookieSettings,
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     };
 
     if (!body.phone || !body.password) {
-      return new NextResponse("Phone and password are required", {
+      return new NextResponse("Телефон и пароль обязательны", {
         status: 400,
       });
     }
@@ -41,6 +42,11 @@ export async function POST(request: Request) {
     tokenCookieStore.set({
       name: PB_TOKEN_COOKIE_NAME,
       value: pbAuthData.token,
+      ...getAuthCookieSettings(),
+    });
+    tokenCookieStore.set({
+      name: PB_EXTERNAL_ID_COOKIE_NAME,
+      value: pbAuthData.record.externalId,
       ...getAuthCookieSettings(),
     });
 

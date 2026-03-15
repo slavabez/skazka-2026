@@ -1,6 +1,6 @@
 export function from1CIdToGuid(id: string): string {
   if (id.length !== 32) {
-    throw new Error("Invalid 1C ID");
+    throw new Error("Некорректный 1C ID");
   }
 
   const parts = [
@@ -16,7 +16,7 @@ export function from1CIdToGuid(id: string): string {
 
 export function fromGuidTo1CId(guid: string): string {
   if (guid.length !== 36) {
-    throw new Error("Invalid GUID");
+    throw new Error("Некорректный GUID");
   }
 
   const parts = guid.split("-");
@@ -26,7 +26,7 @@ export function fromGuidTo1CId(guid: string): string {
 export function extractRefFrom1CLink(link: string): string {
   const queryIndex = link.indexOf("?");
   if (queryIndex === -1) {
-    throw new Error("Invalid 1C link");
+    throw new Error("Некорректная ссылка 1C");
   }
 
   const queryString = link.substring(queryIndex + 1);
@@ -34,7 +34,7 @@ export function extractRefFrom1CLink(link: string): string {
   const ref = searchParams.get("ref");
 
   if (!ref) {
-    throw new Error("ref parameter not found");
+    throw new Error("Параметр ref не найден");
   }
 
   return ref;
