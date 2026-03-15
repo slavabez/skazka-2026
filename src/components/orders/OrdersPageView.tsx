@@ -1,6 +1,7 @@
 "use client";
 
-import { Alert, Loader, Stack, Text, TextInput, Title } from "@mantine/core";
+import { Alert, Stack, Text, TextInput, Title } from "@mantine/core";
+import FullPageLoader from "@/components/FullPageLoader";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import useSWR from "swr";
@@ -59,7 +60,7 @@ export default function OrdersPageView({
         }}
       />
 
-      {isLoading ? <Loader /> : null}
+      {isLoading ? <FullPageLoader /> : null}
       {error ? (
         <Alert color="red">
           {error instanceof Error

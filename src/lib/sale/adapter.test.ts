@@ -3,7 +3,7 @@ import type { ISaleContentFields, ISaleFields } from "@/lib/odata/sale.service";
 import { mapSaleDetailFrom1C } from "./adapter";
 
 describe("sale adapter", () => {
-  const baseSale: any = {
+  const baseSale: ISaleFields = {
     Ref_Key: "sale-1",
     Number: "0001-000777",
     Date: "2026-03-15T10:00:00",
@@ -17,7 +17,7 @@ describe("sale adapter", () => {
     Партнер: { Description: "Client A" },
   };
 
-  const saleItems: any = [
+  const saleItems: ISaleContentFields[] = [
     {
       LineNumber: 1,
       Количество: 1,

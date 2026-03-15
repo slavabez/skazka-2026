@@ -5,11 +5,11 @@ import {
   Alert,
   Button,
   Group,
-  Loader,
   Stack,
   Text,
   Title,
 } from "@mantine/core";
+import FullPageLoader from "@/components/FullPageLoader";
 import Link from "next/link";
 import useSWR from "swr";
 import {
@@ -35,7 +35,7 @@ export default function ReportsDebtsPage() {
     <Stack>
       <Title order={2}>Задолженность клиентов</Title>
 
-      {isLoading ? <Loader /> : null}
+      {isLoading ? <FullPageLoader /> : null}
       {error ? (
         <Alert color="red">
           {error instanceof Error ? error.message : "Ошибка загрузки отчета"}

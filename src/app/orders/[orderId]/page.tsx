@@ -4,12 +4,12 @@ import {
   Alert,
   Card,
   Group,
-  Loader,
   Stack,
   Table,
   Text,
   Title,
 } from "@mantine/core";
+import FullPageLoader from "@/components/FullPageLoader";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
@@ -57,7 +57,7 @@ export default function OrderDetailsPage() {
   );
 
   if (isLoading) {
-    return <Loader />;
+    return <FullPageLoader />;
   }
   if (error) {
     return (

@@ -5,12 +5,12 @@ import {
   Button,
   Card,
   Group,
-  Loader,
   Stack,
   Table,
   Text,
   Title,
 } from "@mantine/core";
+import FullPageLoader from "@/components/FullPageLoader";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
@@ -48,7 +48,7 @@ export default function SaleDocumentDetailsPage() {
   );
 
   if (isLoading) {
-    return <Loader />;
+    return <FullPageLoader />;
   }
   if (error) {
     return (
