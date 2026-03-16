@@ -15,19 +15,16 @@ services:
       ODATA_API_AUTH_HEADER: ${ODATA_API_AUTH_HEADER}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
 
   redis:
     image: redis:7-alpine
     container_name: skazka-redis
     restart: unless-stopped
-    command: ["sh", "-c", "redis-server --appendonly yes --requirepass \"$${REDIS_PASSWORD}\""]
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: ["sh", "-c", "redis-server --appendonly yes"]
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep PONG"]
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       interval: 10s
       timeout: 5s
       retries: 5
