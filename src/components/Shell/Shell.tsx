@@ -103,7 +103,7 @@ export function Shell({ children }: ShellProps) {
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Title order={3}>Skazka</Title>
+          <Title order={3}>Сказка П.У.</Title>
         </Group>
       </AppShell.Header>
 
@@ -168,7 +168,7 @@ export function Shell({ children }: ShellProps) {
 
       <AppShell.Footer p="xs">
         <Text size="xs" c="dimmed" ta="center">
-          © {new Date().getFullYear()} Skazka. Все права защищены.
+          © {new Date().getFullYear()} Сказка, г Кокшетау. Все права защищены.
         </Text>
       </AppShell.Footer>
     </AppShell>
