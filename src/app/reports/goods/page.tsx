@@ -1,5 +1,11 @@
-import { Title } from '@mantine/core';
+import { Suspense } from "react";
+import FullPageLoader from "@/components/FullPageLoader";
+import GoodsPageClient from "./GoodsPageClient";
 
 export default function ReportsGoodsPage() {
-  return <Title order={2}>Продажи по товарам</Title>;
+  return (
+    <Suspense fallback={<FullPageLoader />}>
+      <GoodsPageClient />
+    </Suspense>
+  );
 }

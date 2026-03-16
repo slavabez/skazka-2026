@@ -3,8 +3,8 @@
 import {
   AppShell,
   Avatar,
-  Button,
   Burger,
+  Button,
   Group,
   NavLink,
   rem,
@@ -22,9 +22,9 @@ import {
   LayoutGrid,
   LogIn,
   LogOut,
-  Wrench,
   Truck,
   Users,
+  Wrench,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
-    "postbuild": "cp -r public .next/standalone/apps/web && cp -r .next/static/ .next/standalone/apps/web/.next/static",
-    "start": "node .next/standalone/apps/web/server.js",
+    "postbuild": "mkdir -p .next/standalone/.next && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static",
+    "start": "node .next/standalone/server.js",
     "lint": "biome lint",
     "format": "biome check --write ./src",
     "test": "vitest run",

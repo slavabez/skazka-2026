@@ -1,0 +1,36 @@
+services:
+  app:
+    image: ghcr.io/slavabez/skazka-2026:latest
+    container_name: skazka-2026
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DB_URL: ${DB_URL}
+      ODATA_API_URL: ${ODATA_API_URL}
+      ODATA_API_AUTH_HEADER: ${ODATA_API_AUTH_HEADER}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+  redis:
+    image: redis:7-alpine
+    container_name: skazka-redis
+    restart: unless-stopped
+    command: ["sh", "-c", "redis-server --appendonly yes --requirepass \"$${REDIS_PASSWORD}\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis_data:

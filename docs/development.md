@@ -41,16 +41,21 @@ Defined in `.env.example`:
 
 ## Testing
 
-Current test coverage includes auth utility unit tests:
+Current unit test coverage includes:
 
-- `src/lib/auth/auth.test.ts`
-  - phone normalization
-  - JWT parsing
-  - token time-left calculation
+- auth utilities and auth server context
+- id conversion utilities
+- order formatting and adapters
+- report date helpers
+- sale adapters
 
 Run tests with:
 
 - `npm test`
+
+Extended test strategy and roadmap:
+
+- `docs/testing-strategy.md`
 
 ## Notes for Contributors
 

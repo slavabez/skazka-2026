@@ -2,30 +2,33 @@
 
 ## Summary
 
-Authentication is based on PocketBase user records and JWT tokens, but token storage is handled by this app using a secure HTTP-only cookie.
+Authentication is based on PocketBase user records and JWT tokens. The app stores auth state in secure HTTP-only cookies and uses the external 1C user id to scope business data queries.
 
 ## Cookie Strategy
 
-- Cookie name: `pb_token`
-- Constants are defined in `src/lib/auth/auth.ts`
-- Cookie is set as:
-  - `httpOnly: true`
-  - `sameSite: "strict"`
-  - `secure: true` in production
-  - `path: "/"`
-  - `maxAge: 7 days`
+Cookie constants are defined in `src/lib/auth/auth.ts`.
+
+- `pb_token` - PocketBase JWT
+- `pb_external_id` - external 1C user id (taken from PocketBase user record)
+
+Cookie settings are defined in `getAuthCookieSettings` (`src/lib/auth/pocketbase.ts`):
+
+- `httpOnly: true`
+- `sameSite: "strict"`
+- `secure: true` in production
+- `path: "/"`
+- `maxAge: 7 days`
 
 ## Phone Number Normalization
 
-Before login, phone input is normalized to the `+7xxxxxxxxxx` format:
+Before login, phone input is normalized to `+7xxxxxxxxxx` format:
 
-- Non-digit symbols are removed (`+`, spaces, dashes, brackets)
-- If starts with `8` and has 11 digits, it is converted to `7`
-- Invalid formats return `null` and login is rejected
+- Non-digit symbols are removed
+- If 10 digits are provided, `7` is prepended
+- If input has 11 digits and starts with `8`, it is converted to `7`
+- Invalid formats return `null`
 
-Implemented in:
-
-- `normalizeKzPhone` in `src/lib/auth/auth.ts`
+Implemented in `normalizeKzPhone` (`src/lib/auth/auth.ts`).
 
 ## Auth API Endpoints
 
@@ -34,46 +37,54 @@ Implemented in:
 - Input: `{ phone, password }`
 - Normalizes phone number
 - Calls PocketBase `auth-with-password`
-- Stores returned JWT in `pb_token` cookie
-- Returns:
-  - user record
-  - expiry timestamp (`exp`)
-  - session metadata (`expiry`, `timeLeft`)
+- Stores both `pb_token` and `pb_external_id`
+- Returns user data and session metadata
 
 ### `GET /api/auth/session`
 
-- Reads token from cookie
-- Decodes token to get `id` and `exp`
-- Validates token time left
-- If token is close to expiry (`PB_TOKEN_EXPIRY_THRESHOLD`), refreshes token
-- Fetches current user record from PocketBase
-- Returns current session + user info
+- Reads `pb_token`
+- Parses JWT (`id`, `exp`) and validates expiry
+- Refreshes token when below `PB_TOKEN_EXPIRY_THRESHOLD`
+- Fetches current user from PocketBase
+- Updates `pb_external_id` from fresh user record
+- Returns `session` and `user`
 
 ### `GET /api/auth/refresh`
 
-- Reads token from cookie
+- Reads `pb_token`
 - Calls PocketBase `auth-refresh`
-- Replaces cookie token
-- Returns new expiry metadata
+- Replaces `pb_token`
+- Returns new `expiry` and `timeLeft`
 
 ### `GET|POST /api/auth/logout`
 
-- Deletes `pb_token` cookie
+- Deletes both `pb_token` and `pb_external_id`
 - Returns success response
 
 ### `GET /api/auth/impersonate?t=<JWT>`
 
-- Used by login page if `t` query param exists
-- Validates provided token (`exp` and user fetch)
-- Stores token in cookie
-- Returns user and session info
+- Used by login page when `t` query param is present
+- Validates provided token and user access
+- Stores both `pb_token` and `pb_external_id`
+- Returns user and session metadata
+
+## Server Auth Context
+
+`getAuthRequestContext` (`src/lib/auth/server.ts`) is used by protected API routes and returns:
+
+- `pocketBaseUserId`
+- `pocketBaseToken`
+- `externalUserId`
+
+`externalUserId` comes from `pb_external_id` and is used in 1C/OData filtering for orders and reports.
 
 ## Client Auth Provider
 
 `src/providers/auth.tsx` manages client-side auth state:
 
-- Stores lightweight auth state and user data in localStorage
-- Runs periodic session checks every 60 seconds when authenticated
+- Stores lightweight `isAuthenticated` and `user` in localStorage
+- Checks session every 60 seconds when authenticated
+- Updates stored user when backend user data changes
 - Logs out on unauthorized session response
 - Redirects to `/` on logout
 
@@ -86,4 +97,4 @@ Defined in `src/lib/events.ts` and used in auth flows:
 - `auth_logout`
 - `auth_session_expired`
 
-The provider also calls `window.umami.identify` with user metadata when script is ready.
+The provider also calls `window.umami.identify` with user metadata after the analytics script is ready.

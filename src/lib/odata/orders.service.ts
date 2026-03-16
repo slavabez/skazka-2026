@@ -47,6 +47,7 @@ export async function getOrderById(orderId: string): Promise<IOrderFields[]> {
       "Ref_Key,Number,Date,СуммаДокумента,Комментарий,Статус,ФормаОплаты,ДатаОтгрузки,АдресДоставки,СпособДоставки,Партнер/Description,DeletionMark",
     filter: `Ref_Key eq guid'${orderId}'`,
     expand: "Партнер",
+    cacheExpiration: 300,
   });
 }
 
@@ -65,6 +66,7 @@ export async function getOrdersForUserByDate({
       "Ref_Key,Number,Date,СуммаДокумента,Комментарий,Статус,ФормаОплаты,ДатаОтгрузки,АдресДоставки,СпособДоставки,Партнер/Description,DeletionMark",
     filter: `Менеджер_Key eq guid'${userId}' and Date ge datetime'${startDate}T00:00:00' and Date le datetime'${endDate}T23:59:59'`,
     expand: "Партнер",
+    cacheExpiration: 300,
   });
 }
 
@@ -83,6 +85,7 @@ export async function getOrdersForUserByDeliveryDate({
       "Ref_Key,Number,Date,СуммаДокумента,Статус,ФормаОплаты,ДатаОтгрузки,АдресДоставки,СпособДоставки,Партнер/Description,DeletionMark",
     filter: `Менеджер_Key eq guid'${userId}' and ДатаОтгрузки ge datetime'${startDate}T00:00:00' and ДатаОтгрузки le datetime'${endDate}T23:59:59'`,
     expand: "Партнер",
+    cacheExpiration: 300,
   });
 }
 
@@ -94,6 +97,7 @@ export async function getOrderContent(
     filter: `Ref_Key eq guid'${orderId}'`,
     expand: `Номенклатура`,
     select: `LineNumber,Номенклатура_Key,Количество,ВидЦены_Key,Цена,Сумма,СуммаНДС,СуммаСНДС,СуммаРучнойСкидки,СуммаАвтоматическойСкидки,Отменено,Номенклатура/Description`,
+    cacheExpiration: 300,
   });
 }
 
@@ -104,6 +108,7 @@ export async function getOrderAdditionalProperties(
     path: "InformationRegister_ДополнительныеСведения",
     filter: `Объект eq cast(guid'${orderId}', 'Document_ЗаказКлиента')`,
     select: "Объект,Свойство_Key,Значение",
+    cacheExpiration: 300,
   });
 }
 
@@ -124,6 +129,7 @@ export async function getMultipleOrderAdditionalProperties(
           .map((oi) => `Объект eq cast(guid'${oi}', 'Document_ЗаказКлиента')`)
           .join(" or "),
         select: "Объект,Свойство_Key,Значение",
+        cacheExpiration: 300,
       });
     results.push(await chunkResult);
   }
